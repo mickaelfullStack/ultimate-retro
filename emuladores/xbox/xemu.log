@@ -1,0 +1,6 @@
+xemu_version: 0.8.57
+xemu_branch: master
+xemu_commit: 6e513ed94812246cba3b17954f8da049bb41fbcb
+xemu_date: Wed Apr 30 06:44:57 UTC 2025
+xemu_settings_get_base_path: base path: C:\Users\micka\AppData\Roaming\xemu\xemu\
+xemu_settings_get_path: config path: C:\Users\micka\AppData\Roaming\xemu\xemu\xemu.toml
