@@ -11,28 +11,30 @@ import platform
 import webbrowser
 from pathlib import Path
 
-# Initialization
+# Inicialização
 pygame.init()
 info = pygame.display.Info()
 WIDTH, HEIGHT = 1280, 720
 screen = pygame.display.set_mode((WIDTH, HEIGHT), pygame.RESIZABLE)
 pygame.display.set_caption("Ultimate Retro Emulator")
 
-# Settings
+# Configurações
 clock = pygame.time.Clock()
 FPS = 60
 fullscreen = False
 VERSION = "1.0.0"
 
-# Colors
+# Cores
 BACKGROUND = (15, 15, 20)
 MENU_BG = (25, 25, 30)
 WHITE = (240, 240, 240)
 ACCENT_COLOR = (50, 150, 255)
 HIGHLIGHT_COLOR = (255, 200, 0)
 TEXT_COLOR = (180, 180, 180)
+SELECTED_COLOR = (255, 255, 255, 50)
+SETTINGS_BG = (30, 30, 40, 220)
 
-# Fonts (relative sizes)
+# Tamanhos de fonte relativos
 def get_scaled_font_sizes(base_size):
     return {
         "title": int(base_size * 0.05),
@@ -42,7 +44,7 @@ def get_scaled_font_sizes(base_size):
         "info": int(base_size * 0.018)
     }
 
-# Available platforms
+# Plataformas disponíveis
 PLATFORMS = [
     {"name": "PS1", "logo": "ps1.webp", "color": (0, 70, 140), "thumbnail": "thumb_ps1.png"},
     {"name": "PS2", "logo": "ps2.png", "color": (0, 100, 180), "thumbnail": "Thumbnail-ps2.png"},
@@ -114,7 +116,6 @@ class EmulatorManager:
                 with zipfile.ZipFile(archive_path, 'r') as zip_ref:
                     zip_ref.extractall(destination)
             elif archive_path.endswith('.7z'):
-                # Requer o 7z instalado no sistema
                 subprocess.run(["7z", "x", archive_path, f"-o{destination}"], check=True)
             elif archive_path.endswith('.tar.xz'):
                 subprocess.run(["tar", "-xf", archive_path, "-C", destination], check=True)
@@ -135,12 +136,10 @@ class EmulatorManager:
         ps2_dir = Path(EmulatorManager.EMULATORS_DIR) / "ps2"
         ps2_dir.mkdir(exist_ok=True)
         
-        # Verifica se já está instalado
         executable_path = ps2_dir / pcsx2_info["executable"]
         if executable_path.exists():
             return True
         
-        # Se for Linux e tiver comando de instalação
         if "install_command" in pcsx2_info:
             try:
                 subprocess.run(pcsx2_info["install_command"].split(), check=True)
@@ -148,18 +147,16 @@ class EmulatorManager:
             except subprocess.CalledProcessError:
                 return False
         
-        # Para Windows e macOS, baixa e extrai
         if "download_url" in pcsx2_info:
             archive_name = pcsx2_info["download_url"].split('/')[-1]
             archive_path = ps2_dir / archive_name
             
-            # Mostrar mensagem de progresso
             print(f"Baixando PCSX2 de {pcsx2_info['download_url']}...")
             
             if EmulatorManager.download_file(pcsx2_info["download_url"], archive_path):
                 print("Extraindo PCSX2...")
                 if EmulatorManager.extract_archive(archive_path, ps2_dir):
-                    archive_path.unlink()  # Remove o arquivo após extrair
+                    archive_path.unlink()
                     print("PCSX2 instalado com sucesso!")
                     return True
         
@@ -340,7 +337,7 @@ class Carousel:
             self.animating = True
             self.elevation = 0
             self.adjust_scroll()
-            return True  # Indicates selection changed
+            return True
         return False
             
     def adjust_scroll(self):
@@ -394,17 +391,17 @@ class Carousel:
             
             if i == self.selected:
                 shadow = pygame.Surface((self.item_width + 20, self.item_height + 20), pygame.SRCALPHA)
-                shadow.fill((0, 0, 0, 100))
+                shadow.fill((0, 0, 0, 150))
                 shadow_rect = shadow.get_rect(center=(
                     x + self.item_width//2, 
-                    self.y_pos + self.item_height//2 + y_offset + 5
+                    self.y_pos + self.item_height//2 + y_offset + 8
                 ))
                 surface.blit(shadow, shadow_rect)
                 
-                pygame.draw.rect(surface, platform["color"], 
-                               (x - 10, self.y_pos - 10 + y_offset, 
-                                self.item_width + 20, self.item_height + 20),
-                               border_radius=10)
+                s = pygame.Surface((self.item_width + 20, self.item_height + 20), pygame.SRCALPHA)
+                s.fill((*platform["color"], 100))
+                pygame.draw.rect(s, (255, 255, 255, 30), s.get_rect(), border_radius=10)
+                surface.blit(s, (x - 10, self.y_pos - 10 + y_offset))
             
             logo_rect = platform["image"].get_rect(center=(
                 x + self.item_width//2, 
@@ -543,60 +540,103 @@ class SettingsMenu:
             {"text": "Sair", "action": "quit"}
         ]
         self.selected = 0
+        self.selector_pos = 0
+        self.selector_height = 0
+        self.selector_target_pos = 0
+        self.selector_anim_speed = 0.2
         
     def toggle(self):
         self.visible = not self.visible
         if self.visible:
             self.selected = 0
-        
+            self.selector_pos = 0
+            self.selector_target_pos = 0
+            
     def draw(self, surface):
         if not self.visible:
             return
             
         overlay = pygame.Surface((WIDTH, HEIGHT), pygame.SRCALPHA)
-        overlay.fill((0, 0, 0, 200))
+        overlay.fill((0, 0, 0, 180))
         surface.blit(overlay, (0, 0))
         
-        menu_width = int(WIDTH * 0.15) * 1.5
-        menu_height = len(self.options) * self.assets.button_height + self.assets.margin * (len(self.options) + 1)
-        menu_rect = pygame.Rect(
-            WIDTH//2 - menu_width//2,
-            HEIGHT//2 - menu_height//2,
-            menu_width,
-            menu_height
-        )
-        pygame.draw.rect(surface, MENU_BG, menu_rect, border_radius=10)
+        menu_width = min(int(WIDTH * 0.4), 600)
+        menu_height = min(int(HEIGHT * 0.6), 500)
+        menu_x = WIDTH // 2 - menu_width // 2
+        menu_y = HEIGHT // 2 - menu_height // 2
+        
+        menu_bg = pygame.Surface((menu_width, menu_height), pygame.SRCALPHA)
+        menu_bg.fill(SETTINGS_BG)
+        
+        border = pygame.Surface((menu_width, menu_height), pygame.SRCALPHA)
+        pygame.draw.rect(border, (*ACCENT_COLOR, 30), border.get_rect(), 3, border_radius=15)
+        menu_bg.blit(border, (0, 0))
+        
+        shadow = pygame.Surface((menu_width + 20, menu_height + 20), pygame.SRCALPHA)
+        shadow.fill((0, 0, 0, 100))
+        surface.blit(shadow, (menu_x - 10, menu_y - 10))
+        
+        surface.blit(menu_bg, (menu_x, menu_y))
         
         title = self.assets.fonts["title"].render("Configurações", True, WHITE)
         surface.blit(title, (
-            WIDTH//2 - title.get_width()//2,
-            menu_rect.y + self.assets.margin
+            WIDTH // 2 - title.get_width() // 2,
+            menu_y + self.assets.margin * 2
         ))
         
+        if abs(self.selector_pos - self.selector_target_pos) > 1:
+            self.selector_pos += (self.selector_target_pos - self.selector_pos) * self.selector_anim_speed
+        else:
+            self.selector_pos = self.selector_target_pos
+        
+        option_height = int(menu_height * 0.15)
+        option_start_y = menu_y + int(menu_height * 0.2)
+        
         for i, option in enumerate(self.options):
-            y_pos = menu_rect.y + self.assets.margin * 2 + self.assets.button_height * i + self.assets.margin * i
+            option_y = option_start_y + i * (option_height + self.assets.margin)
+            option_rect = pygame.Rect(
+                menu_x + self.assets.margin * 2,
+                option_y,
+                menu_width - self.assets.margin * 4,
+                option_height
+            )
             
             if i == self.selected:
-                pygame.draw.rect(surface, ACCENT_COLOR, (
-                    menu_rect.x + self.assets.margin,
-                    y_pos,
-                    menu_width - self.assets.margin * 2,
-                    self.assets.button_height
-                ), border_radius=5)
+                self.selector_target_pos = option_y
+                self.selector_height = option_height
+                
+                selector = pygame.Surface((menu_width - self.assets.margin * 4, option_height), pygame.SRCALPHA)
+                selector.fill((*ACCENT_COLOR, 80))
+                pygame.draw.rect(selector, (*ACCENT_COLOR, 150), selector.get_rect(), 2, border_radius=8)
+                
+                selector_pos_rect = pygame.Rect(
+                    menu_x + self.assets.margin * 2,
+                    int(self.selector_pos),
+                    menu_width - self.assets.margin * 4,
+                    self.selector_height
+                )
+                surface.blit(selector, selector_pos_rect)
             
-            option_rect = pygame.Rect(
-                menu_rect.x + self.assets.margin,
-                y_pos,
-                menu_width - self.assets.margin * 2,
-                self.assets.button_height
-            )
-            pygame.draw.rect(surface, (40, 40, 50), option_rect, border_radius=5)
+            pygame.draw.rect(surface, (*MENU_BG, 150), option_rect, border_radius=8)
             
             text = self.assets.fonts["menu"].render(option["text"], True, WHITE)
             surface.blit(text, (
                 option_rect.x + (option_rect.width - text.get_width()) // 2,
                 option_rect.y + (option_rect.height - text.get_height()) // 2
             ))
+            
+            if i == self.selected:
+                selector_icon = self.assets.fonts["menu"].render(">", True, HIGHLIGHT_COLOR)
+                surface.blit(selector_icon, (
+                    option_rect.x + self.assets.margin,
+                    option_rect.y + (option_rect.height - selector_icon.get_height()) // 2
+                ))
+                
+                selector_icon = self.assets.fonts["menu"].render("<", True, HIGHLIGHT_COLOR)
+                surface.blit(selector_icon, (
+                    option_rect.right - self.assets.margin - selector_icon.get_width(),
+                    option_rect.y + (option_rect.height - selector_icon.get_height()) // 2
+                ))
     
     def handle_input(self, event):
         if not self.visible:
@@ -605,8 +645,10 @@ class SettingsMenu:
         if event.type == KEYDOWN:
             if event.key == K_UP:
                 self.selected = max(0, self.selected - 1)
+                return "selection_changed"
             elif event.key == K_DOWN:
                 self.selected = min(len(self.options) - 1, self.selected + 1)
+                return "selection_changed"
             elif event.key == K_RETURN:
                 action = self.options[self.selected]["action"]
                 if action == "toggle_fullscreen":
@@ -627,19 +669,19 @@ class Emulator:
         self.running = True
         self.current_screen = "platforms"
         self.thumbnail = None
-        self.last_selected = -1  # Track last selected platform
+        self.last_selected = -1
         self.emulator_manager = EmulatorManager()
-        
-        # Verificar instalação do emulador PS2
+        self.thumbnail_alpha = 0
+        self.thumbnail_target_alpha = 255
+        self.thumbnail_change_speed = 10
         self.check_emulator_installation()
     
     def check_emulator_installation(self):
-        # Verifica se o emulador PS2 está instalado
         ps2_platform = next((p for p in PLATFORMS if p["name"] == "PS2"), None)
         if ps2_platform:
             if not self.emulator_manager.install_pcsx2():
                 ps2_platform["name"] = "PS2 (Instalar)"
-                ps2_platform["color"] = (255, 50, 50)  # Vermelho para indicar problema
+                ps2_platform["color"] = (255, 50, 50)
     
     def toggle_fullscreen(self):
         global fullscreen, screen, WIDTH, HEIGHT
@@ -662,44 +704,47 @@ class Emulator:
             selected_platform = PLATFORMS[self.carousel.selected]
             self.game_selection = GameSelection(selected_platform, self.assets)
             self.game_selection.visible = True
-        self.update_thumbnail()  # Update thumbnail when resizing
+        self.update_thumbnail()
         
     def update_thumbnail(self):
         selected_platform = PLATFORMS[self.carousel.selected]
         try:
-            self.thumbnail = self.assets.get_image(
+            new_thumbnail = self.assets.get_image(
                 f"thumbs/{selected_platform['thumbnail']}", 
                 (int(WIDTH * 0.6), int(HEIGHT * 0.4))
             )
+            
+            if self.thumbnail is None or selected_platform['thumbnail'] != self.last_thumbnail_name:
+                self.last_thumbnail_name = selected_platform['thumbnail']
+                self.thumbnail_alpha = 0
+                self.thumbnail_target_alpha = 255
+                self.thumbnail = new_thumbnail
+            else:
+                self.thumbnail = new_thumbnail
         except:
-            # Fallback if thumbnail doesn't exist
             self.thumbnail = pygame.Surface((int(WIDTH * 0.6), int(HEIGHT * 0.4)))
             self.thumbnail.fill(selected_platform["color"])
             text = self.assets.fonts["title"].render(selected_platform["name"], True, WHITE)
             text_rect = text.get_rect(center=(self.thumbnail.get_width()//2, self.thumbnail.get_height()//2))
             self.thumbnail.blit(text, text_rect)
-        
+            self.thumbnail_alpha = 255
+    
     def launch_game(self, game):
         print(f"Iniciando jogo: {game['title']}")
         
-        # Verifica se é um jogo de PS2
         if "PS2" in game["title"]:
             if "Instalar" in next((p["name"] for p in PLATFORMS if p["name"] == "PS2 (Instalar)"), ""):
-                # Se o emulador precisa ser instalado
                 if self.emulator_manager.install_pcsx2():
-                    # Atualiza a UI após instalação bem-sucedida
                     ps2_platform = next(p for p in PLATFORMS if p["name"] == "PS2 (Instalar)")
                     ps2_platform["name"] = "PS2"
                     ps2_platform["color"] = (0, 100, 180)
-                    self.carousel.platforms = PLATFORMS  # Atualiza a lista no carrossel
+                    self.carousel.platforms = PLATFORMS
                 else:
                     print("Falha ao instalar o PCSX2")
                     return
             
-            # URL do jogo específico que você mencionou
             game_url = "https://firebasestorage.googleapis.com/v0/b/nerdflix-111cc.appspot.com/o/games%2Fchino-pes2014.iso?alt=media&token=64410bf6-dc2d-46b0-ab1b-7d50bff08151"
             
-            # Mostrar mensagem de carregamento
             loading_surface = pygame.Surface((WIDTH, HEIGHT), pygame.SRCALPHA)
             loading_surface.fill((0, 0, 0, 200))
             loading_text = self.assets.fonts["title"].render("Baixando jogo...", True, WHITE)
@@ -710,11 +755,9 @@ class Emulator:
             screen.blit(loading_surface, (0, 0))
             pygame.display.flip()
             
-            # Baixar o jogo
             game_path = self.emulator_manager.download_game(game_url, "pes2014")
             
             if game_path:
-                # Executar o emulador
                 success = self.emulator_manager.run_pcsx2(game_path, fullscreen)
                 if not success:
                     error_surface = pygame.Surface((WIDTH, HEIGHT), pygame.SRCALPHA)
@@ -726,7 +769,7 @@ class Emulator:
                     ))
                     screen.blit(error_surface, (0, 0))
                     pygame.display.flip()
-                    pygame.time.delay(2000)  # Mostra o erro por 2 segundos
+                    pygame.time.delay(2000)
             else:
                 error_surface = pygame.Surface((WIDTH, HEIGHT), pygame.SRCALPHA)
                 error_surface.fill((0, 0, 0, 200))
@@ -737,7 +780,7 @@ class Emulator:
                 ))
                 screen.blit(error_surface, (0, 0))
                 pygame.display.flip()
-                pygame.time.delay(2000)  # Mostra o erro por 2 segundos
+                pygame.time.delay(2000)
     
     def handle_events(self):
         for event in pygame.event.get():
@@ -819,28 +862,35 @@ class Emulator:
         title = self.assets.fonts["title"].render("Ultimate Retro Emulator", True, WHITE)
         surface.blit(title, (WIDTH//2 - title.get_width()//2, self.assets.margin * 2))
         
+        if self.thumbnail_alpha < self.thumbnail_target_alpha:
+            self.thumbnail_alpha = min(self.thumbnail_alpha + self.thumbnail_change_speed, self.thumbnail_target_alpha)
+        
         if self.thumbnail:
             thumb_rect = self.thumbnail.get_rect(center=(
                 WIDTH//2, 
                 HEIGHT//2 - int(self.assets.base_size * 0.3)//2
             ))
-            surface.blit(self.thumbnail, thumb_rect)
+            
+            if self.thumbnail_alpha < 255:
+                thumbnail_copy = self.thumbnail.copy()
+                thumbnail_copy.set_alpha(self.thumbnail_alpha)
+                surface.blit(thumbnail_copy, thumb_rect)
+            else:
+                surface.blit(self.thumbnail, thumb_rect)
         
         self.carousel.draw(surface)
         
-        instructions = [
-            "Use ← → para navegar",
-            "Enter para selecionar",
-            "ESC para voltar",
-            "C para configurações"
-        ]
+        instructions = ["← → Navegar", "Enter Selecionar", "ESC Voltar", "C Configurações"]
+        total_text_width = sum(self.assets.fonts["info"].render(text, True, WHITE).get_width() for text in instructions)
+        total_text_width += (len(instructions) - 1) * self.assets.margin * 2
         
-        for i, text in enumerate(instructions):
+        start_x = WIDTH // 2 - total_text_width // 2
+        y_pos = HEIGHT - int(self.assets.base_size * 0.3) - self.assets.margin * 3
+        
+        for text in instructions:
             instr = self.assets.fonts["info"].render(text, True, WHITE)
-            surface.blit(instr, (
-                WIDTH//2 - instr.get_width()//2,
-                HEIGHT - int(self.assets.base_size * 0.3) - self.assets.margin * (len(instructions) - i + 1)
-            ))
+            surface.blit(instr, (start_x, y_pos))
+            start_x += instr.get_width() + self.assets.margin * 2
         
         copyright_text = self.assets.fonts["info"].render(
             "© 2025 Mickael Cypriano da Rocha - Todos os direitos reservados", 
@@ -867,6 +917,7 @@ class Emulator:
     def run(self):
         self.update_thumbnail()
         self.last_selected = self.carousel.selected
+        self.last_thumbnail_name = PLATFORMS[self.carousel.selected]['thumbnail']
         
         while self.running:
             self.handle_events()
@@ -874,7 +925,6 @@ class Emulator:
             if WIDTH != screen.get_width() or HEIGHT != screen.get_height():
                 self.update_sizes()
             
-            # Check if platform selection changed
             if self.current_screen == "platforms" and self.carousel.selected != self.last_selected:
                 self.update_thumbnail()
                 self.last_selected = self.carousel.selected
@@ -895,7 +945,6 @@ class Emulator:
             clock.tick(FPS)
 
 if __name__ == "__main__":
-    # Verificar e criar diretórios necessários
     Path("emuladores/ps2").mkdir(parents=True, exist_ok=True)
     Path("bios/ps2").mkdir(parents=True, exist_ok=True)
     Path("games/ps2").mkdir(parents=True, exist_ok=True)

@@ -1,0 +1,89 @@
+# Arquivo de dados de jogos para Ultimate Retro Emulator
+# Formato: Nome_do_Jogo;URL_Capa;URL_Download
+
+# ============ PlayStation 1 ============
+Final_Fantasy_VII;https://example.com/covers/ps1/ff7.jpg;https://example.com/downloads/ps1/ff7.iso
+Metal_Gear_Solid;https://example.com/covers/ps1/mgs.jpg;https://example.com/downloads/ps1/mgs.iso
+Crash_Bandicoot;https://example.com/covers/ps1/crash.jpg;https://example.com/downloads/ps1/crash.iso
+Resident_Evil_2;https://example.com/covers/ps1/re2.jpg;https://example.com/downloads/ps1/re2.iso
+Tekken_3;https://example.com/covers/ps1/tekken3.jpg;https://example.com/downloads/ps1/tekken3.iso
+Castlevania_Symphony_of_the_Night;https://example.com/covers/ps1/sotn.jpg;https://example.com/downloads/ps1/sotn.iso
+Gran_Turismo_2;https://example.com/covers/ps1/gt2.jpg;https://example.com/downloads/ps1/gt2.iso
+Silent_Hill;https://example.com/covers/ps1/sh.jpg;https://example.com/downloads/ps1/sh.iso
+Spyro_the_Dragon;https://example.com/covers/ps1/spyro.jpg;https://example.com/downloads/ps1/spyro.iso
+Tony_Hawk_Pro_Skater_2;https://example.com/covers/ps1/thps2.jpg;https://example.com/downloads/ps1/thps2.iso
+
+# ============ PlayStation 2 ============
+Dragon_Ball_Z_Budokai_Tenkaichi_3;https://coolrom.com.au/screenshots/ps2/DragonBall%20Z%20-%20Budokai%20Tenkaichi%203.jpg;https://dl.coolrom.com.au/dl/41799/4P0Bce5Z2XMcr6G8f-lcOA/1746164824/
+Grand_Theft_Auto_San_Andreas;https://coolrom.com.au/screenshots/ps2/Grand%20Theft%20Auto%20-%20San%20Andreas.jpg;https://dl.coolrom.com.au/dl/41807/PtO2sjaTcpioAmI1nsJq1A/1746164914/
+God_of_War;https://example.com/covers/ps2/gow.jpg;https://example.com/downloads/ps2/gow.iso
+Shadow_of_the_Colossus;https://example.com/covers/ps2/sotc.jpg;https://example.com/downloads/ps2/sotc.iso
+Metal_Gear_Solid_3;https://example.com/covers/ps2/mgs3.jpg;https://example.com/downloads/ps2/mgs3.iso
+Final_Fantasy_X;https://example.com/covers/ps2/ffx.jpg;https://example.com/downloads/ps2/ffx.iso
+Kingdom_Hearts_2;https://example.com/covers/ps2/kh2.jpg;https://example.com/downloads/ps2/kh2.iso
+Resident_Evil_4;https://example.com/covers/ps2/re4.jpg;https://example.com/downloads/ps2/re4.iso
+Devil_May_Cry_3;https://example.com/covers/ps2/dmc3.jpg;https://example.com/downloads/ps2/dmc3.iso
+Persona_4;https://example.com/covers/ps2/p4.jpg;https://example.com/downloads/ps2/p4.iso
+
+# ============ PlayStation Portable ============
+God_of_War_Chains_of_Olympus;https://example.com/covers/psp/gow_coo.jpg;https://example.com/downloads/psp/gow_coo.iso
+Monster_Hunter_Freedom_Unite;https://example.com/covers/psp/mhfu.jpg;https://example.com/downloads/psp/mhfu.iso
+Crisis_Core_Final_Fantasy_VII;https://example.com/covers/psp/ccff7.jpg;https://example.com/downloads/psp/ccff7.iso
+Metal_Gear_Solid_Peace_Walker;https://example.com/covers/psp/mgspw.jpg;https://example.com/downloads/psp/mgspw.iso
+Persona_3_Portable;https://example.com/covers/psp/p3p.jpg;https://example.com/downloads/psp/p3p.iso
+Grand_Theft_Auto_Liberty_City_Stories;https://example.com/covers/psp/gtalcs.jpg;https://example.com/downloads/psp/gtalcs.iso
+Final_Fantasy_Tactics_War_of_the_Lions;https://example.com/covers/psp/fftwotl.jpg;https://example.com/downloads/psp/fftwotl.iso
+Tekken_6;https://example.com/covers/psp/tekken6.jpg;https://example.com/downloads/psp/tekken6.iso
+Daxter;https://example.com/covers/psp/daxter.jpg;https://example.com/downloads/psp/daxter.iso
+Lumines;https://example.com/covers/psp/lumines.jpg;https://example.com/downloads/psp/lumines.iso
+
+# ============ PlayStation 3 ============
+The_Last_of_Us;https://example.com/covers/ps3/tlou.jpg;https://example.com/downloads/ps3/tlou.iso
+Uncharted_2;https://example.com/covers/ps3/uc2.jpg;https://example.com/downloads/ps3/uc2.iso
+Metal_Gear_Solid_4;https://example.com/covers/ps3/mgs4.jpg;https://example.com/downloads/ps3/mgs4.iso
+God_of_War_3;https://example.com/covers/ps3/gow3.jpg;https://example.com/downloads/ps3/gow3.iso
+Red_Dead_Redemption;https://example.com/covers/ps3/rdr.jpg;https://example.com/downloads/ps3/rdr.iso
+Demon_Souls;https://example.com/covers/ps3/demons.jpg;https://example.com/downloads/ps3/demons.iso
+LittleBigPlanet;https://example.com/covers/ps3/lbp.jpg;https://example.com/downloads/ps3/lbp.iso
+Heavy_Rain;https://example.com/covers/ps3/hr.jpg;https://example.com/downloads/ps3/hr.iso
+Gran_Turismo_5;https://example.com/covers/ps3/gt5.jpg;https://example.com/downloads/ps3/gt5.iso
+Infamous;https://example.com/covers/ps3/infamous.jpg;https://example.com/downloads/ps3/infamous.iso
+
+# ============ Nintendo ============
+Super_Mario_64;https://example.com/covers/n64/sm64.jpg;https://example.com/downloads/n64/sm64.iso
+The_Legend_of_Zelda_Ocarina_of_Time;https://example.com/covers/n64/oot.jpg;https://example.com/downloads/n64/oot.iso
+GoldenEye_007;https://example.com/covers/n64/goldeneye.jpg;https://example.com/downloads/n64/goldeneye.iso
+Super_Smash_Bros;https://example.com/covers/n64/ssb.jpg;https://example.com/downloads/n64/ssb.iso
+Mario_Kart_64;https://example.com/covers/n64/mk64.jpg;https://example.com/downloads/n64/mk64.iso
+Pokemon_Stadium;https://example.com/covers/n64/pokestad.jpg;https://example.com/downloads/n64/pokestad.iso
+Donkey_Kong_64;https://example.com/covers/n64/dk64.jpg;https://example.com/downloads/n64/dk64.iso
+Star_Fox_64;https://example.com/covers/n64/sf64.jpg;https://example.com/downloads/n64/sf64.iso
+Banjo_Kazooie;https://example.com/covers/n64/bk.jpg;https://example.com/downloads/n64/bk.iso
+Paper_Mario;https://example.com/covers/n64/pm.jpg;https://example.com/downloads/n64/pm.iso
+
+# ============ Sega ============
+Sonic_the_Hedgehog;https://example.com/covers/genesis/sonic1.jpg;https://example.com/downloads/genesis/sonic1.iso
+Streets_of_Rage_2;https://example.com/covers/genesis/sor2.jpg;https://example.com/downloads/genesis/sor2.iso
+Mortal_Kombat_II;https://example.com/covers/genesis/mk2.jpg;https://example.com/downloads/genesis/mk2.iso
+Phantasy_Star_IV;https://example.com/covers/genesis/ps4.jpg;https://example.com/downloads/genesis/ps4.iso
+Shinobi_III;https://example.com/covers/genesis/shinobi3.jpg;https://example.com/downloads/genesis/shinobi3.iso
+Comix_Zone;https://example.com/covers/genesis/comix.jpg;https://example.com/downloads/genesis/comix.iso
+Gunstar_Heroes;https://example.com/covers/genesis/gunstar.jpg;https://example.com/downloads/genesis/gunstar.iso
+Altered_Beast;https://example.com/covers/genesis/altered.jpg;https://example.com/downloads/genesis/altered.iso
+Golden_Axe;https://example.com/covers/genesis/goldenaxe.jpg;https://example.com/downloads/genesis/goldenaxe.iso
+ToeJam_and_Earl;https://example.com/covers/genesis/tje.jpg;https://example.com/downloads/genesis/tje.iso
+
+# ============ Xbox ============
+Halo_Combat_Evolved;https://example.com/covers/xbox/halo.jpg;https://example.com/downloads/xbox/halo.iso
+Halo_2;https://example.com/covers/xbox/halo2.jpg;https://example.com/downloads/xbox/halo2.iso
+Fable;https://example.com/covers/xbox/fable.jpg;https://example.com/downloads/xbox/fable.iso
+Ninja_Gaiden_Black;https://example.com/covers/xbox/ngb.jpg;https://example.com/downloads/xbox/ngb.iso
+Star_Wars_Knights_of_the_Old_Republic;https://example.com/covers/xbox/kotor.jpg;https://example.com/downloads/xbox/kotor.iso
+Forza_Motorsport;https://example.com/covers/xbox/forza.jpg;https://example.com/downloads/xbox/forza.iso
+Project_Gotham_Racing_2;https://example.com/covers/xbox/pgr2.jpg;https://example.com/downloads/xbox/pgr2.iso
+Dead_or_Alive_3;https://example.com/covers/xbox/doa3.jpg;https://example.com/downloads/xbox/doa3.iso
+Tom_Clancys_Splinter_Cell;https://example.com/covers/xbox/sc.jpg;https://example.com/downloads/xbox/sc.iso
+Morrowind;https://example.com/covers/xbox/morrowind.jpg;https://example.com/downloads/xbox/morrowind.iso
+
+# Adicione mais jogos abaixo mantendo o mesmo formato
+# Nome_do_Jogo;URL_Capa;URL_Download
